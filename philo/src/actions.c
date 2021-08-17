@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:26 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/14 23:45:35 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/17 13:07:18 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	*death_prediction(void *phi)
 		if (!philo->table->limited_meals
 			|| philo->meals_eated < philo->table->eat_limit)
 		{
+			pthread_mutex_lock(&philo->table->display);
 			annonce(philo, DEATH);
 			philo->table->someone_die = 1;
 		}
@@ -75,6 +76,7 @@ void	*death_prediction(void *phi)
 		pthread_mutex_unlock(philo->table->forks);
 		pthread_mutex_unlock(philo->table->forks
 			+ (philo->name * !(philo->name == philo->table->n_philo)));
+		pthread_mutex_unlock(&philo->table->display);
 	}
 	return (NULL);
 }
