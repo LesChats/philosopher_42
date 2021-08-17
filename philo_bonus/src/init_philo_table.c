@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/16 13:35:01 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/17 16:20:03 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	set_the_cultery(struct s_the_table *table, char **av, const int ac)
 {
 	sem_unlink("forks");
 	sem_unlink("display");
-	sem_unlink("pthread");
+	sem_unlink("kill_table");
 	table->n_philo = ft_atoi(av[1]);
 	table->time_die = ft_atoi(av[2]);
 	table->time_eat = ft_atoi(av[3]) * 1000;
@@ -62,23 +62,33 @@ uint8_t	dress_table(struct s_the_table *table, t_philo **philosopher,
 	uint32_t	i;
 	sem_t		*forks;
 	sem_t		*display;
+	sem_t		*kill_table;
+	sem_t		**eat_sem;
+	static char	sem_name[64] = "eat                     ";
+
 
 	set_the_cultery(table, av, ac);
+	eat_sem = malloc(sizeof(sem_t *) * table->n_philo);
 	*philosopher = malloc(sizeof(t_philo) * (table->n_philo + 1));
 	if (!*philosopher)
 		return (printf("%sError:%s memory allocation have failed", RED, EOC));
 	forks = sem_open("forks", O_CREAT | O_EXCL, S_IRWXU, table->n_philo);
 	display = sem_open("display", O_CREAT | O_EXCL, S_IRWXU, 1);
+	kill_table = sem_open("kill_table", O_CREAT | O_EXCL, S_IRWXU, 1);
 	i = 0;
 	while (i < table->n_philo)
 	{
+		ft_buffnbr(i + 1, sem_name + 4, 20);
+		sem_unlink(sem_name);
+		(*philosopher)[i].eat_sem = sem_open(sem_name, O_CREAT | O_EXCL, S_IRWXU, 1);
 		(*philosopher)[i].table = table;
 		(*philosopher)[i].last_meal = 0;
-		(*philosopher)[i].meals_eated = 0;
+//		(*philosopher)[i].meals_eated = 0;
 		(*philosopher)[i].name = i + 1;
-		(*philosopher)[i].is_dead = 0;
+//		(*philosopher)[i].is_dead = 0;
 		(*philosopher)[i].forks = forks;
 		(*philosopher)[i].display = display;
+		(*philosopher)[i].kill_table = kill_table;
 		++i;
 	}
 	(*philosopher)[table->n_philo].name = 0;

@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/16 13:33:33 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/17 17:13:24 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,55 +21,59 @@ static void	kill_all(t_philo *philo)
 	}
 }
 
+static void	*monitor_count(void *phi)
+{
+	t_philo *const	philo = phi;
+	const struct s_the_table *table = philo->table;
+	uint32_t		total = 0;
+	uint32_t		i;
+
+	while (total <= table->eat_limit)
+	{
+		i = 0;
+		while (i < table->n_philo)
+			sem_wait(philo[i++].eat_sem);
+		++total;
+	}
+	sem_wait(philo->display);
+	write (1, ALL, LEN);
+	sem_post(philo->kill_table);
+	return (NULL);
+}
+	
+
 static void	monitor(t_philo *philo)
 {
-	uint32_t	i;
-	uint32_t	finished_meals;
-	int			status;
+	pthread_t	eat_count;
 
-	status = 0;
-	finished_meals = 0;
-	i = 0;
-	while (1)
+	sem_wait(philo->kill_table);
+	if (philo->table->limited_meals)
 	{
-		waitpid(philo[i].pid, &status, WNOHANG);
-		if (WEXITSTATUS(status) == 2)
-			return (kill_all(philo));
-		if (WEXITSTATUS(status) == 1)
-		{
-			if (++finished_meals == philo->table->n_philo)
-			{
-				printf ("\n%s*\t%d\t%sAll meals have been eated *%s\n",
-					PURPLE, get_time(&philo->table->time_start), GREEN, EOC);
-				return (kill_all(philo));
-			}
-		}
-		++i;
-		i *= (i != philo->table->n_philo);
+		pthread_create(&eat_count, NULL, &monitor_count, philo);
+		pthread_detach(eat_count);
 	}
+	sem_wait(philo->kill_table);
+	kill_all(philo);
 }
 
-static int	dinner(t_philo *philo)
+static void	dinner(t_philo *philo)
 {
 	pthread_t	death_oracle;
 
-	while (!philo->is_dead && (!philo->table->limited_meals
-			|| philo->meals_eated < philo->table->eat_limit))
+	pthread_create(&death_oracle, NULL, &death_prediction, philo);
+	pthread_detach(death_oracle);
+	while (1)
 	{
-		pthread_create(&death_oracle, NULL, &death_prediction, philo);
-		pthread_detach(death_oracle);
 		take_forks(philo);
 		eat_(philo);
 		sleep_(philo);
 		think_(philo);
 	}
-	return (philo->is_dead + !philo->is_dead);
 }
 
 static void	start_dinner(t_philo *philos)
 {
 	uint32_t	i;
-	int			tmp;
 
 	i = 0;
 	gettimeofday(&(philos->table->time_start), NULL);
@@ -77,14 +81,7 @@ static void	start_dinner(t_philo *philos)
 	{
 		philos[i].pid = fork();
 		if (philos[i].pid == 0)
-		{
-			tmp = dinner(philos + i);
-			usleep(philos->table->time_die * 1000);
-			sem_close(philos->forks);
-			sem_close(philos->display);
-			free(philos);
-			exit(tmp);
-		}
+			dinner(philos + i);
 		usleep(30);
 		++i;
 	}

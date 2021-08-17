@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:03 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/16 13:29:49 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/17 16:20:06 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@
 # define	THINK	"\033[1;34m is thinking     \033[0;0m\n"
 # define	EAT 	"\033[1;32m is eating       \033[0;0m\n"
 # define	FORK	"\033[1;33m has taken a fork\033[0;0m\n"
+# define	ALL		"\033[1;32m all meals eated!\033[0;0m\n"
 # define	LEN		31
 
 /*	
@@ -55,27 +56,31 @@
 struct	s_the_table	
 {
 	struct timeval	time_start;
-	pthread_t		*philos;
-
+	
 	uint32_t		time_die;
 	uint32_t		time_eat;
 	uint32_t		time_sleep;
 	uint32_t		eat_limit;
 	uint32_t		n_philo;
+	
 	char			limited_meals;
 };
 
 typedef struct s_philo
 {
 	struct s_the_table	*table;
+	
 	sem_t				*forks;
 	sem_t				*display;
-	sem_t				*pthread;
+	sem_t				*kill_table;
+	sem_t				*eat_sem;
+	
 	int					pid;
 	uint32_t			name;
 	uint32_t			last_meal;
-	uint32_t			meals_eated;
-	char				is_dead;
+
+//	uint32_t			meals_eated;
+//	char				is_dead;
 }						t_philo;
 
 /*
@@ -88,6 +93,7 @@ uint32_t	get_time(struct timeval *tv);
 **	Output
 */
 void		annonce(const t_philo *philo, const char *message);
+uint32_t	ft_buffnbr(uint32_t n, char *buf, uint32_t end);
 uint8_t		one_philo(const struct s_the_table *table);
 
 /*
