@@ -6,85 +6,35 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/17 17:13:24 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/18 18:08:12 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher_bonus.h"
 
-static void	kill_all(t_philo *philo)
-{
-	while (philo->name)
-	{
-		kill(philo->pid, SIGKILL);
-		++philo;
-	}
-}
-
-static void	*monitor_count(void *phi)
-{
-	t_philo *const	philo = phi;
-	const struct s_the_table *table = philo->table;
-	uint32_t		total = 0;
-	uint32_t		i;
-
-	while (total <= table->eat_limit)
-	{
-		i = 0;
-		while (i < table->n_philo)
-			sem_wait(philo[i++].eat_sem);
-		++total;
-	}
-	sem_wait(philo->display);
-	write (1, ALL, LEN);
-	sem_post(philo->kill_table);
-	return (NULL);
-}
-	
-
-static void	monitor(t_philo *philo)
-{
-	pthread_t	eat_count;
-
-	sem_wait(philo->kill_table);
-	if (philo->table->limited_meals)
-	{
-		pthread_create(&eat_count, NULL, &monitor_count, philo);
-		pthread_detach(eat_count);
-	}
-	sem_wait(philo->kill_table);
-	kill_all(philo);
-}
-
-static void	dinner(t_philo *philo)
-{
-	pthread_t	death_oracle;
-
-	pthread_create(&death_oracle, NULL, &death_prediction, philo);
-	pthread_detach(death_oracle);
-	while (1)
-	{
-		take_forks(philo);
-		eat_(philo);
-		sleep_(philo);
-		think_(philo);
-	}
-}
-
-static void	start_dinner(t_philo *philos)
+static uint8_t	free_assage(t_philo **philos)
 {
 	uint32_t	i;
 
+	if (!*philos)
+		return (1);
+	sem_close((*philos)->display);
+	sem_close((*philos)->forks);
+	sem_close((*philos)->kill_table);
 	i = 0;
-	gettimeofday(&(philos->table->time_start), NULL);
-	while (i < philos->table->n_philo)
-	{
-		philos[i].pid = fork();
-		if (philos[i].pid == 0)
-			dinner(philos + i);
-		usleep(30);
-		++i;
-	}
+	while (i < (*philos)->table->n_philo)
+		sem_close(((*philos) + i++)->eat_sem);
+	free(*philos);
+	return (1);
+}
+
+static uint8_t	print_usage(void)
+{
+	printf ("%sError:%s Wrong usage\n", RED, EOC);
+	printf ("%sUsage%s ./philo [num on philo] [time to die]", YELLOW, EOC);
+	printf (" [time to eat] [time to sleep] %soptional:%s", BLUE, EOC);
+	printf (" [num of meal]\n");
+	return (1);
 }
 
 int	main(int ac, char **av)
@@ -93,23 +43,10 @@ int	main(int ac, char **av)
 	t_philo				*philos;
 
 	if (ac != 5 && ac != 6)
-	{
-		printf ("%sError:%s Wrong usage\n", RED, EOC);
-		printf ("%sUsage%s ./philo [num on philo] [time to die]", YELLOW, EOC);
-		printf (" [time to eat] [time to sleep] %soptional:%s", BLUE, EOC);
-		return (printf (" [num of meal]\n"));
-	}
+		return (print_usage());
 	if (dress_table(&table, &philos, av, ac))
-	{
-		sem_close(philos->display);
-		sem_close(philos->forks);
-		free(philos);
-		return (1);
-	}
+		return (free_assage(&philos));
 	start_dinner(philos);
-	monitor(philos);
-	sem_close(philos->display);
-	sem_close(philos->forks);
-	free(philos);
+	free_assage(&philos);
 	return (0);
 }

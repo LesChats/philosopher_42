@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:50 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/16 12:04:17 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/18 16:10:21 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,21 @@ uint32_t	ft_atoi(const char *s)
 		res = res * 10 + tmp;
 		++s;
 	}
+}
+
+uint32_t	ft_buffnbr(uint32_t n, char *buf, uint32_t end)
+{
+	uint32_t	i;
+
+	i = end;
+	if (n == 0)
+		buf[--i] = '0';
+	while (n)
+	{
+		buf[--i] = '0' + (n % 10);
+		n /= 10;
+	}
+	return (end - i);
 }
 
 uint32_t	get_time(struct timeval *tv)

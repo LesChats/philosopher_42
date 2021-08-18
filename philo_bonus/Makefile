@@ -6,7 +6,7 @@
 #    By: abaudot <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/09 14:48:17 by abaudot           #+#    #+#              #
-#    Updated: 2021/08/16 12:03:32 by abaudot          ###   ########.fr        #
+#    Updated: 2021/08/18 17:59:26 by abaudot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRC 	:=	output.c				\
 	  		init_philo_table.c		\
 	  		lib.c					\
 	  		actions.c				\
+			dinner.c				\
 	  		philosopher.c
 
 OBJ			:= $(SRC:%.c=$(OBJ_DIR)/%.o)

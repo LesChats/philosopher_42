@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:26 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/17 17:13:22 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/18 17:37:01 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	*death_prediction(void *phi)
 		time_ = get_time(&philo->table->time_start);
 		if (time_ > philo->last_meal + philo->table->time_die)
 		{
-			annonce(philo, DEATH);
+			annonce_death(philo);
 			sem_post(philo->kill_table);
 			return (NULL);
 		}

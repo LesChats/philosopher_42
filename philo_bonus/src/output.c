@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:12:15 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/17 17:13:23 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/18 18:09:58 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,7 @@ static void	ft_strncpy(char *dst, const char *src, const uint32_t n)
 	}
 }
 
-uint32_t	ft_buffnbr(uint32_t n, char *buf, uint32_t end)
-{
-	uint32_t	i;
-
-	i = end;
-	if (n == 0)
-		buf[--i] = '0';
-	while (n)
-	{
-		buf[--i] = '0' + (n % 10);
-		n /= 10;
-	}
-	return (end - i);
-}
-
-uint32_t	num_size(uint32_t num)
+static uint32_t	num_size(uint32_t num)
 {
 	return (1 + (num >= 10) + (num >= 100) + (num >= 1000) + (num >= 10000)
 		+ (num >= 100000) + (num >= 1000000) + (num >= 10000000));
@@ -54,13 +39,15 @@ uint8_t	one_philo(const struct s_the_table *table)
 	ft_buffnbr(table->time_die, buff, 18);
 	buff[i++] = '1';
 	buff[i++] = '\t';
-	ft_strncpy(buff + i, DEATH, LEN);
 	i += LEN;
+	ft_strncpy(buff + i, FORK, LEN);
+	write(1, buff, i);
+	ft_strncpy(buff + i, DEATH, LEN);
 	write(1, buff, i);
 	return (1);
 }
 
-void	annonce_death(const t_philo)
+void	annonce_death(const t_philo *philo)
 {
 	static char	buff[64] = "\033[1;36m-----------\033[0;0m\t";
 	uint32_t	i;
@@ -73,7 +60,6 @@ void	annonce_death(const t_philo)
 	i += LEN;
 	write(1, buff, i);
 }
-
 
 void	annonce(const t_philo *philo, const char *message)
 {
