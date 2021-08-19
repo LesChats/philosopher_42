@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:50 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/18 16:10:21 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/19 15:26:58 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ uint32_t	ft_buffnbr(uint32_t n, char *buf, uint32_t end)
 
 uint32_t	get_time(struct timeval *tv)
 {
-	struct timeval			current_time;
+	static struct timeval	current_time;
 
 	gettimeofday(&current_time, NULL);
-	return ((int)(current_time.tv_sec - tv->tv_sec) *1000
-			+ (int)(current_time.tv_usec - tv->tv_usec) *0.001);
+	return ((int)((int)current_time.tv_sec - tv->tv_sec) *1000
+			+ (int)((int)current_time.tv_usec - tv->tv_usec) *0.001);
 }

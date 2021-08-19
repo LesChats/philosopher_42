@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:26 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/17 13:07:18 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/19 16:13:22 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,28 +55,29 @@ void	think_(const t_philo *philo)
 
 void	*death_prediction(void *phi)
 {
-	t_philo *const	philo = phi;
-	uint32_t		time_;
+	t_philo *const	p = phi;
 
-	if (philo->table->someone_die)
-		return (NULL);
-	usleep(philo->table->time_die * 1000);
-	time_ = get_time(&philo->table->time_start);
-	if (time_ >= philo->last_meal + philo->table->time_die)
+	while (!p->table->someone_die)
 	{
-		if (!philo->table->limited_meals
-			|| philo->meals_eated < philo->table->eat_limit)
+		if (p->table->limited_meals && p->meals_eated >= p->table->eat_limit)
 		{
-			pthread_mutex_lock(&philo->table->display);
-			annonce(philo, DEATH);
-			philo->table->someone_die = 1;
+			p->has_finished = 1;
+			return (NULL);
 		}
-		else
-			philo->table->someone_die = 2;
-		pthread_mutex_unlock(philo->table->forks);
-		pthread_mutex_unlock(philo->table->forks
-			+ (philo->name * !(philo->name == philo->table->n_philo)));
-		pthread_mutex_unlock(&philo->table->display);
+		pthread_mutex_lock(&p->table->display);
+		if ((get_time(&p->table->time_start) >= p->last_meal
+				+ p->table->time_die))
+		{
+			annonce(p, DEATH);
+			p->table->someone_die = 1;
+			pthread_mutex_unlock(p->table->forks);
+			pthread_mutex_unlock(p->table->forks
+				+ (p->name * !(p->name == p->table->n_philo)));
+			pthread_mutex_unlock(&p->table->display);
+			return (NULL);
+		}
+		pthread_mutex_unlock(&p->table->display);
+		usleep(1000);
 	}
 	return (NULL);
 }

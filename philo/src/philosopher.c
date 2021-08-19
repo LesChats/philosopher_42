@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/14 23:42:08 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/19 16:11:44 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,9 @@ static void	monitor(struct s_the_table *table)
 {
 	while (table->finished_meal != table->n_philo)
 		usleep(1000);
-	if (table->limited_meals && table->someone_die != 1)
+	if (!table->someone_die)
 		printf ("\n%s*\t%d\t%sAll meals have been eated *%s\n",
 			PURPLE, get_time(&table->time_start), GREEN, EOC);
-	usleep(1000 * table->time_die);
 }
 
 static void	*dinner(void *phi)
@@ -27,11 +26,10 @@ static void	*dinner(void *phi)
 	t_philo *const	philo = phi;
 	pthread_t		death_oracle;
 
-	while (!(philo->table->someone_die) && (!philo->table->limited_meals
-			|| philo->meals_eated < philo->table->eat_limit))
+	pthread_create(&death_oracle, NULL, &death_prediction, phi);
+	pthread_detach(death_oracle);
+	while (!philo->table->someone_die && !philo->has_finished)
 	{
-		pthread_create(&death_oracle, NULL, &death_prediction, phi);
-		pthread_detach(death_oracle);
 		take_forks(philo);
 		eat_(philo);
 		sleep_(philo);
@@ -39,7 +37,7 @@ static void	*dinner(void *phi)
 	}
 	++philo->table->finished_meal;
 	return (NULL);
-}	
+}
 
 static char	start_dinner(t_philo *philos)
 {

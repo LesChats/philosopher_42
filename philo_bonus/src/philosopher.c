@@ -6,23 +6,23 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/18 18:08:12 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/18 22:43:04 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher_bonus.h"
 
-static uint8_t	free_assage(t_philo **philos)
+static uint8_t	free_assage(t_philo **philos, const uint32_t n)
 {
 	uint32_t	i;
 
-	if (!*philos)
+	if (!(*philos) || !n)
 		return (1);
 	sem_close((*philos)->display);
 	sem_close((*philos)->forks);
 	sem_close((*philos)->kill_table);
 	i = 0;
-	while (i < (*philos)->table->n_philo)
+	while (i < n)
 		sem_close(((*philos) + i++)->eat_sem);
 	free(*philos);
 	return (1);
@@ -45,8 +45,8 @@ int	main(int ac, char **av)
 	if (ac != 5 && ac != 6)
 		return (print_usage());
 	if (dress_table(&table, &philos, av, ac))
-		return (free_assage(&philos));
+		return (free_assage(&philos, table.n_philo));
 	start_dinner(philos);
-	free_assage(&philos);
+	free_assage(&philos, table.n_philo);
 	return (0);
 }

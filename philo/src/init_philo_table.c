@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/11 12:32:40 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/19 15:49:16 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ uint8_t	dress_table(struct s_the_table *table, t_philo **philosopher,
 		(*philosopher)[i].last_meal = 0;
 		(*philosopher)[i].meals_eated = 0;
 		(*philosopher)[i].name = i + 1;
+		(*philosopher)[i].has_finished = 0;
 		++i;
 	}
 	pthread_mutex_init(&table->display, NULL);

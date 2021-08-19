@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/18 18:19:27 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/18 22:43:45 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@
 static uint8_t	check_the_table_one_last_time_befor_dinner_begin(
 		const struct s_the_table *table)
 {
-	if (table->n_philo == 0)
-		return (printf ("%sError:%s It must be at least one=1 guest\n",
-				RED, EOC));
 	if (table->time_die == 0)
 		return (printf ("%sError:%s Everyone should die at one %stime%s\n",
 				   	RED, EOC, BLUE, EOC));
@@ -93,6 +90,9 @@ uint8_t	dress_table(struct s_the_table *table, t_philo **philosopher,
 	*philosopher = malloc(sizeof(t_philo) * (table->n_philo));
 	if (!*philosopher)
 		return (printf("%sError:%s memory allocation have failed", RED, EOC));
+	if (table->n_philo == 0)
+		return (printf ("%sError:%s It must be at least one=1 guest\n",
+				RED, EOC));
 	(*philosopher)->table = table;
 	(*philosopher)->name = 1;
 	(*philosopher)->last_meal = 0;

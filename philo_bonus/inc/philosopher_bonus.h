@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:03 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/18 18:20:48 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/19 13:16:41 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,8 @@ uint32_t	get_time(struct timeval *tv);
 **	Output
 */
 void		annonce(const t_philo *philo, const char *message);
-void		annonce_death(const t_philo *philo);
-uint32_t	ft_buffnbr(uint32_t n, char *buf, uint32_t end);
 uint8_t		one_philo(const struct s_the_table *table);
+uint32_t	ft_buffnbr(uint32_t n, char *buf, uint32_t end);
 
 /*
 **	init

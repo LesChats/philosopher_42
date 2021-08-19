@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:50 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/17 13:43:45 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/19 15:33:40 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ uint32_t	get_time(struct timeval *tv)
 	struct timeval			current_time;
 
 	gettimeofday(&current_time, NULL);
-	return ((int)((uint32_t)current_time.tv_sec - (uint32_t)tv->tv_sec) *1000
-			+ (int)((uint32_t)current_time.tv_usec - (uint32_t)tv->tv_usec) *0.001);
+	return ((int)((uint32_t)current_time.tv_sec - tv->tv_sec) *1000
+			+ (int)((uint32_t)current_time.tv_usec - tv->tv_usec) *0.001);
 }

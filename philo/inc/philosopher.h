@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:03 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/14 00:23:16 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/19 16:13:40 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ struct	s_the_table
 	uint32_t		eat_limit;
 	uint32_t		finished_meal;
 	uint32_t		n_philo;
-	uint32_t		someone_die;
+	char			someone_die;
 	char			limited_meals;
 };
 
@@ -71,6 +71,7 @@ typedef struct s_philo
 	uint32_t			last_meal;
 	uint32_t			name;
 	uint32_t			meals_eated;
+	char				has_finished;
 
 }						t_philo;
 

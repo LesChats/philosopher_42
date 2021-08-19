@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:12:15 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/11 12:13:51 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/19 16:03:16 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	annonce(const t_philo *philo, const char *message)
 	static char	buff[64] = "\033[1;36m-----------\033[0;0m\t";
 	uint32_t	i;
 
-	if (philo->table->someone_die)
+	if (philo->table->someone_die || philo->has_finished)
 		return ;
 	i = 26;
 	ft_buffnbr(get_time(&philo->table->time_start), buff, 18);
