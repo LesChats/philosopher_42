@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/23 17:42:59 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/23 18:32:22 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ static uint8_t	rewiew_guest_list(t_philo *philos, uint32_t n_philo)
 		philos[n_philo].display = philos->display;
 		philos[n_philo].kill_table = philos->kill_table;
 	}
+	free(eat_sem);
 	return (0);
 }
 
