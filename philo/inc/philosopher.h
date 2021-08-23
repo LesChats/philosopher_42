@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:03 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/19 16:13:40 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/23 17:28:14 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,10 @@
 
 struct	s_the_table	
 {
-	struct timeval	time_start;
 	pthread_t		*philos;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	display;
-
+	long			time_start;
 	uint32_t		time_die;
 	uint32_t		time_eat;
 	uint32_t		time_sleep;
@@ -68,18 +67,18 @@ struct	s_the_table
 typedef struct s_philo
 {
 	struct s_the_table	*table;
-	uint32_t			last_meal;
+	long				last_meal;
 	uint32_t			name;
 	uint32_t			meals_eated;
 	char				has_finished;
-
 }						t_philo;
 
 /*
 ** lib
 */
 uint32_t	ft_atoi(const char *s);
-uint32_t	get_time(struct timeval *tv);
+long		get_timestamp(void);
+void		ft_usleep(int duration);
 
 /*
 **	Output

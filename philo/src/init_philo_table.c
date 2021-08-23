@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/19 15:49:16 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/23 17:29:37 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ static void	set_the_cultery(struct s_the_table *table, char **av, const int ac)
 {
 	table->n_philo = ft_atoi(av[1]);
 	table->time_die = ft_atoi(av[2]);
-	table->time_eat = ft_atoi(av[3]) * 1000;
-	table->time_sleep = ft_atoi(av[4]) * 1000;
+	table->time_eat = ft_atoi(av[3]);
+	table->time_sleep = ft_atoi(av[4]);
 	table->limited_meals = (ac == 6);
 	if (table->limited_meals)
 		table->eat_limit = ft_atoi(av[5]);
@@ -72,7 +72,6 @@ uint8_t	dress_table(struct s_the_table *table, t_philo **philosopher,
 	{
 		pthread_mutex_init(table->forks + i, NULL);
 		(*philosopher)[i].table = table;
-		(*philosopher)[i].last_meal = 0;
 		(*philosopher)[i].meals_eated = 0;
 		(*philosopher)[i].name = i + 1;
 		(*philosopher)[i].has_finished = 0;

@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/19 16:11:44 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/23 17:27:41 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static void	monitor(struct s_the_table *table)
 	while (table->finished_meal != table->n_philo)
 		usleep(1000);
 	if (!table->someone_die)
-		printf ("\n%s*\t%d\t%sAll meals have been eated *%s\n",
-			PURPLE, get_time(&table->time_start), GREEN, EOC);
+		printf ("\n%s*\t%ld\t%sAll meals have been eated *%s\n",
+			PURPLE, get_timestamp() - table->time_start, GREEN, EOC);
 }
 
 static void	*dinner(void *phi)
@@ -26,6 +26,7 @@ static void	*dinner(void *phi)
 	t_philo *const	philo = phi;
 	pthread_t		death_oracle;
 
+	philo->last_meal = get_timestamp();
 	pthread_create(&death_oracle, NULL, &death_prediction, phi);
 	pthread_detach(death_oracle);
 	while (!philo->table->someone_die && !philo->has_finished)
@@ -43,7 +44,7 @@ static char	start_dinner(t_philo *philos)
 {
 	uint32_t	i;
 
-	gettimeofday(&(philos->table->time_start), NULL);
+	philos->table->time_start = get_timestamp();
 	i = 0;
 	while (i < philos->table->n_philo)
 	{
@@ -51,7 +52,7 @@ static char	start_dinner(t_philo *philos)
 				NULL, &dinner, philos + i))
 			return (printf ("%sError:%s pthread_create fail\n", RED, EOC));
 		pthread_detach(philos->table->philos[i]);
-		usleep(5);
+		usleep(10);
 		++i;
 	}
 	return (0);
