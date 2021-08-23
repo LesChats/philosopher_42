@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/18 22:43:45 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/23 17:42:59 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ static void	set_the_cultery(struct s_the_table *table, char **av, const int ac)
 	sem_unlink("kill_table");
 	table->n_philo = ft_atoi(av[1]);
 	table->time_die = ft_atoi(av[2]);
-	table->time_eat = ft_atoi(av[3]) * 1000;
-	table->time_sleep = ft_atoi(av[4]) * 1000;
+	table->time_eat = ft_atoi(av[3]);
+	table->time_sleep = ft_atoi(av[4]);
 	table->limited_meals = (ac == 6);
 	if (table->limited_meals)
 		table->eat_limit = ft_atoi(av[5]);
@@ -74,7 +74,6 @@ static uint8_t	rewiew_guest_list(t_philo *philos, uint32_t n_philo)
 		philos[n_philo].eat_sem = sem_open(sem_name,
 				O_CREAT | O_EXCL, S_IRWXU, 1);
 		philos[n_philo].table = philos->table;
-		philos[n_philo].last_meal = 0;
 		philos[n_philo].name = n_philo + 1;
 		philos[n_philo].forks = philos->forks;
 		philos[n_philo].display = philos->display;

@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:50 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/19 15:26:58 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/23 17:41:32 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,23 @@ uint32_t	ft_buffnbr(uint32_t n, char *buf, uint32_t end)
 	return (end - i);
 }
 
-uint32_t	get_time(struct timeval *tv)
+long	get_timestamp(void)
 {
-	static struct timeval	current_time;
+	static struct timeval	tv;
 
-	gettimeofday(&current_time, NULL);
-	return ((int)((int)current_time.tv_sec - tv->tv_sec) *1000
-			+ (int)((int)current_time.tv_usec - tv->tv_usec) *0.001);
+	gettimeofday(&tv, NULL);
+	return (((tv.tv_sec * 1000) + tv.tv_usec * 0.001));
+}
+
+void	ft_usleep(int duration)
+{
+	const long	start = get_timestamp();
+	long		current;
+
+	current = 0;
+	while (duration > current)
+	{
+		usleep(100);
+		current = get_timestamp() - start;
+	}
 }

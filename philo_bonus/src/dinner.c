@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/18 17:38:35 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/18 18:06:15 by abaudot          ###   ########.fr       */
+/*   Updated: 2021/08/23 17:45:43 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ static void	dinner(t_philo *philo)
 {
 	pthread_t	death_oracle;
 
+	philo->last_meal = get_timestamp();
 	pthread_create(&death_oracle, NULL, &death_prediction, philo);
 	pthread_detach(death_oracle);
 	while (1)
@@ -80,7 +81,7 @@ void	start_dinner(t_philo *philos)
 	uint32_t	i;
 
 	i = 0;
-	gettimeofday(&(philos->table->time_start), NULL);
+	philos->table->time_start = get_timestamp();
 	while (i < philos->table->n_philo)
 	{
 		philos[i].pid = fork();
