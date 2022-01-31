@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/23 17:27:41 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/01/31 15:27:24 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,29 +29,29 @@ static void	*dinner(void *phi)
 	philo->last_meal = get_timestamp();
 	pthread_create(&death_oracle, NULL, &death_prediction, phi);
 	pthread_detach(death_oracle);
-	while (!philo->table->someone_die && !philo->has_finished)
+	while (!philo->perspective->someone_die && !philo->has_finished)
 	{
 		take_forks(philo);
 		eat_(philo);
 		sleep_(philo);
 		think_(philo);
 	}
-	++philo->table->finished_meal;
+	++philo->perspective->finished_meal;
 	return (NULL);
 }
 
-static char	start_dinner(t_philo *philos)
+static char	start_dinner(t_philo *philos, struct s_the_table *table)
 {
 	uint32_t	i;
 
-	philos->table->time_start = get_timestamp();
+	table->time_start = get_timestamp();
 	i = 0;
-	while (i < philos->table->n_philo)
+	while (i < table->n_philo)
 	{
-		if (pthread_create(philos->table->philos + i,
+		if (pthread_create(table->philos + i,
 				NULL, &dinner, philos + i))
 			return (printf ("%sError:%s pthread_create fail\n", RED, EOC));
-		pthread_detach(philos->table->philos[i]);
+		pthread_detach(table->philos[i]);
 		usleep(10);
 		++i;
 	}
@@ -97,7 +97,7 @@ int	main(int ac, char **av)
 	if (dress_table(&table, &philos, av, ac))
 		return (clean_the_table_and_send_the_philosophers_home(
 				&table, &philos));
-	if (start_dinner(philos))
+	if (start_dinner(philos, &table))
 		return (clean_the_table_and_send_the_philosophers_home(
 				&table, &philos));
 	monitor(&table);

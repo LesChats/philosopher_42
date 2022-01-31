@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:12:15 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/23 17:31:35 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/01/31 15:29:27 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ void	annonce(const t_philo *philo, const char *message)
 	static char	buff[64] = "\033[1;36m-----------\033[0;0m\t";
 	uint32_t	i;
 
-	if (philo->table->someone_die || philo->has_finished)
+	if (philo->perspective->someone_die || philo->has_finished)
 		return ;
 	i = 26;
-	ft_buffnbr(get_timestamp() - philo->table->time_start, buff, 18);
+	ft_buffnbr(get_timestamp() - philo->perspective->time_start, buff, 18);
 	i += ft_buffnbr(philo->name, buff + i, num_size(philo->name));
 	buff[i++] = '\t';
 	ft_strncpy(buff + i, message, LEN);
@@ -71,7 +71,7 @@ void	annonce(const t_philo *philo, const char *message)
 	uint32_t	i;
 
 	i = 13;
-	ft_buffnbr(get_time(&philo->table->time_start), buff, 11);
+	ft_buffnbr(get_time(&philo->perspective->time_start), buff, 11);
 	i += ft_buffnbr(philo->name, buff + i, num_size(philo->name));
 	buff[i++] = '\t';
 	ft_strncpy(buff + i, message, LEN);

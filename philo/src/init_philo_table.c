@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/23 17:29:37 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/01/31 15:52:30 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,16 @@ static uint8_t	check_the_table_one_last_time_befor_dinner_begin(
 		printf (" in the same room may results in unspecified behavior\n");
 	}
 	if (table->time_die == 0)
-		return (printf ("%sError:%s Everyone should die at one %stime%s\n",
-				   	RED, EOC, BLUE, EOC));
+		return (printf("%sError:%s Everyone should die at one %stime%s\n",
+				RED, EOC, BLUE, EOC));
 	if (table->time_eat == 0)
-		return (printf ("%sError:%s Every living being must eat at one time\n",
-				   RED, EOC));
+		return (printf("%sError:%s Every living being must eat at one time\n",
+				RED, EOC));
 	if (table->time_sleep == 0)
-		return (printf ("%sError:%s Philosopher must eat at one %stime%s\n",
+		return (printf("%sError:%s Philosopher must eat at one %stime%s\n",
 				RED, EOC, BLUE, EOC));
 	if (table->limited_meals && table->eat_limit == 0)
-		return (printf ("%sError:%s We need to serve at least one %smeal%s\n",
+		return (printf("%sError:%s We need to serve at least one %smeal%s\n",
 				RED, EOC, GREEN, EOC));
 	return (0);
 }
@@ -71,7 +71,7 @@ uint8_t	dress_table(struct s_the_table *table, t_philo **philosopher,
 	while (i < table->n_philo)
 	{
 		pthread_mutex_init(table->forks + i, NULL);
-		(*philosopher)[i].table = table;
+		(*philosopher)[i].perspective = table;
 		(*philosopher)[i].meals_eated = 0;
 		(*philosopher)[i].name = i + 1;
 		(*philosopher)[i].has_finished = 0;

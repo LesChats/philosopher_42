@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/23 18:32:22 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/01/31 16:16:40 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static uint8_t	check_the_table_one_last_time_befor_dinner_begin(
 {
 	if (table->time_die == 0)
 		return (printf ("%sError:%s Everyone should die at one %stime%s\n",
-				   	RED, EOC, BLUE, EOC));
+				RED, EOC, BLUE, EOC));
 	if (table->time_eat == 0)
 		return (printf ("%sError:%s Every living being must eat at one time\n",
-				   RED, EOC));
+				RED, EOC));
 	if (table->time_sleep == 0)
 		return (printf ("%sError:%s Philosopher must eat at one %stime%s\n",
 				RED, EOC, BLUE, EOC));
