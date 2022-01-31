@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2022/01/31 15:27:24 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/01/31 18:42:48 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,16 @@
 
 static void	monitor(struct s_the_table *table)
 {
+	long	finish_time;
+
 	while (table->finished_meal != table->n_philo)
 		usleep(1000);
+	finish_time = get_timestamp() - table->time_start;
+	if (finish_time > table->time_die)
+		finish_time = table->time_die;
 	if (!table->someone_die)
 		printf ("\n%s*\t%ld\t%sAll meals have been eated *%s\n",
-			PURPLE, get_timestamp() - table->time_start, GREEN, EOC);
+			PURPLE, finish_time, GREEN, EOC);
 }
 
 static void	*dinner(void *phi)
@@ -28,7 +33,6 @@ static void	*dinner(void *phi)
 
 	philo->last_meal = get_timestamp();
 	pthread_create(&death_oracle, NULL, &death_prediction, phi);
-	pthread_detach(death_oracle);
 	while (!philo->perspective->someone_die && !philo->has_finished)
 	{
 		take_forks(philo);
@@ -36,6 +40,7 @@ static void	*dinner(void *phi)
 		sleep_(philo);
 		think_(philo);
 	}
+	pthread_join(death_oracle, NULL);
 	++philo->perspective->finished_meal;
 	return (NULL);
 }
@@ -51,10 +56,12 @@ static char	start_dinner(t_philo *philos, struct s_the_table *table)
 		if (pthread_create(table->philos + i,
 				NULL, &dinner, philos + i))
 			return (printf ("%sError:%s pthread_create fail\n", RED, EOC));
-		pthread_detach(table->philos[i]);
 		usleep(10);
 		++i;
 	}
+	i = 0;
+	while (i < table->n_philo)
+		pthread_join(table->philos[i++], NULL);
 	return (0);
 }
 
