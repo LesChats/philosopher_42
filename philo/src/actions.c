@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:26 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 17:11:02 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 17:44:40 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void	take_forks(t_philo *philo)
 	pthread_mutex_lock(philo->perspective->forks + (philo->name - 1));
 	pthread_mutex_lock(philo->perspective->forks
 		+ (philo->name * !(philo->name == philo->perspective->n_philo)));
-	pthread_mutex_lock(&philo->perspective->display);
 	philo->offset = get_timestamp();
+	pthread_mutex_lock(&philo->perspective->display);
 	annonce(philo, FORK);
 	annonce(philo, FORK);
 	pthread_mutex_unlock(&philo->perspective->display);

@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 14:39:34 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 17:54:28 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ static char	start_dinner(t_philo *philos, struct s_the_table *table)
 	pthread_mutex_lock(&table->display);
 	if (lauch_philo(philos, table, 0))
 		return (1);
-	ft_usleep(table->time_eat >> 1);
-	if (lauch_philo(philos, table, 1))
-		return (1);
 	table->time_start = get_timestamp();
 	pthread_mutex_unlock(&table->display);
+	ft_usleep(table->time_eat);
+	if (lauch_philo(philos, table, 1))
+		return (1);
 	usleep(2000);
 	monitor(table, philos);
 	i = 0;
