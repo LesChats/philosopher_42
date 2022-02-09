@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:03 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 14:41:13 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 21:20:17 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ typedef struct s_philo
 	uint32_t			name;
 	uint32_t			meals_eated;
 	uint8_t				n_name;
-	char				str_name[7];
+	char				str_name[6];
 }						t_philo;
 
 /*

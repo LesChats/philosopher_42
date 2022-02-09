@@ -6,7 +6,7 @@
 #    By: abaudot <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/09 14:48:17 by abaudot           #+#    #+#              #
-#    Updated: 2022/02/09 17:46:24 by abaudot          ###   ########.fr        #
+#    Updated: 2022/02/09 21:01:59 by abaudot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ UNAME	:= $(shell uname)
 
 CC		=	gcc
 
-CFLAGS		=	-Wall -Wextra -Werror -Ofast
+CFLAGS		=	-Wall -Wextra -Werror -g3
 IFLAGS		=	-I./inc
 SRC_DIR		=	src
 BUILD 		:=	.build

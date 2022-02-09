@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:50 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/23 17:31:16 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 21:25:21 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ uint32_t	ft_atoi(const char *s)
 
 long	get_timestamp(void)
 {
-	static struct timeval	tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return (((tv.tv_sec * 1000) + tv.tv_usec * 0.001));

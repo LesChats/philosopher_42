@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 17:54:28 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 21:20:10 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,15 @@ static void	*dinner(void *phi)
 	uint8_t const	limited_meals = philo->perspective->limited_meals;
 
 	philo->last_meal = get_timestamp();
-	while (!philo->perspective->someone_die)
+	while (1)
 	{
+		pthread_mutex_lock(&philo->perspective->display);
+		if (philo->perspective->someone_die)
+		{
+			pthread_mutex_unlock(&philo->perspective->display);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->perspective->display);
 		take_forks(philo);
 		eat_(philo);
 		if (limited_meals)
@@ -30,7 +37,9 @@ static void	*dinner(void *phi)
 		sleep_(philo);
 		think_(philo);
 	}
+	pthread_mutex_lock(&philo->perspective->display);
 	++philo->perspective->finished_meal;
+	pthread_mutex_unlock(&philo->perspective->display);
 	return (NULL);
 }
 
@@ -75,9 +84,9 @@ static int	clean_the_table_and_send_the_philosophers_home(
 	uint32_t	i;
 
 	pthread_mutex_destroy(&table->display);
-	i = 0;
 	if (table->forks)
 	{
+		i = 0;
 		while (i < table->n_philo)
 		{
 			pthread_mutex_destroy(table->forks + i);

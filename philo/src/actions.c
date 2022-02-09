@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:26 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 17:44:40 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 21:25:22 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,15 @@ void	monitor(struct s_the_table *table, t_philo *philo)
 	long		finish_time;
 	uint32_t	i;
 
-	while (table->finished_meal != table->n_philo)
+	while (1)
 	{
 		i = 0;
 		pthread_mutex_lock(&table->display);
+		if (table->finished_meal == table->n_philo)
+		{
+			pthread_mutex_unlock(&table->display);
+			return ;
+		}
 		finish_time = get_timestamp();
 		while (i < table->n_philo)
 		{
@@ -28,9 +33,6 @@ void	monitor(struct s_the_table *table, t_philo *philo)
 			{
 				annonce(philo + i, DEATH);
 				table->someone_die = 1;
-				pthread_mutex_unlock(table->forks + i);
-				pthread_mutex_unlock(table->forks + (i + 1)
-					* (philo[i].name != table->n_philo));
 				pthread_mutex_unlock(&table->display);
 				return ;
 			}
@@ -43,9 +45,14 @@ void	monitor(struct s_the_table *table, t_philo *philo)
 
 void	take_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->perspective->forks + (philo->name - 1));
-	pthread_mutex_lock(philo->perspective->forks
-		+ (philo->name * !(philo->name == philo->perspective->n_philo)));
+	uint32_t	tmp;
+
+	tmp = philo->name - (philo->name & 1);
+	tmp *= !(tmp == philo->perspective->n_philo);
+	pthread_mutex_lock(philo->perspective->forks + tmp);
+	tmp = philo->name - !(philo->name & 1);
+	tmp *= !(tmp == philo->perspective->n_philo);
+	pthread_mutex_lock(philo->perspective->forks + tmp);
 	philo->offset = get_timestamp();
 	pthread_mutex_lock(&philo->perspective->display);
 	annonce(philo, FORK);
@@ -56,14 +63,18 @@ void	take_forks(t_philo *philo)
 void	eat_(t_philo *philo)
 {
 	uint32_t	time;
+	uint8_t		someone_die;
 
 	pthread_mutex_lock(&philo->perspective->display);
+	someone_die = philo->perspective->someone_die;
 	annonce(philo, EAT);
 	++philo->meals_eated;
 	philo->last_meal = get_timestamp();
 	pthread_mutex_unlock(&philo->perspective->display);
+
+
 	time = philo->perspective->time_eat - (get_timestamp() - philo->offset);
-	ft_usleep(time * (!philo->perspective->someone_die));
+	ft_usleep(time * (!someone_die));
 	philo->offset = get_timestamp();
 	pthread_mutex_unlock(philo->perspective->forks + (philo->name - 1));
 	pthread_mutex_unlock(philo->perspective->forks
@@ -73,12 +84,15 @@ void	eat_(t_philo *philo)
 void	sleep_(t_philo *philo)
 {
 	uint32_t	time;
+	uint8_t		someone_die;
 
 	pthread_mutex_lock(&philo->perspective->display);
+	someone_die = philo->perspective->someone_die;
 	annonce(philo, SLEEP);
 	pthread_mutex_unlock(&philo->perspective->display);
+
 	time = philo->perspective->time_sleep - (get_timestamp() - philo->offset);
-	ft_usleep(time * !philo->perspective->someone_die);
+	ft_usleep(time * !someone_die);
 	philo->offset = get_timestamp();
 }
 
