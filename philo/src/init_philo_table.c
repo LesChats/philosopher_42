@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 16:40:46 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 16:48:46 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ uint8_t	dress_table(struct s_the_table *table, t_philo **philosopher,
 {
 	uint32_t	i;
 
-	printf("hello size of philo: %lu\n", sizeof(t_philo));
 	set_the_cultery(table, av, ac);
 	table->philos = malloc(sizeof(pthread_t) * table->n_philo);
 	*philosopher = malloc(sizeof(t_philo) * table->n_philo);
