@@ -6,59 +6,63 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2022/01/31 18:42:48 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 14:39:34 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 
-static void	monitor(struct s_the_table *table)
-{
-	long	finish_time;
-
-	while (table->finished_meal != table->n_philo)
-		usleep(1000);
-	finish_time = get_timestamp() - table->time_start;
-	if (finish_time > table->time_die)
-		finish_time = table->time_die;
-	if (!table->someone_die)
-		printf ("\n%s*\t%ld\t%sAll meals have been eated *%s\n",
-			PURPLE, finish_time, GREEN, EOC);
-}
-
 static void	*dinner(void *phi)
 {
 	t_philo *const	philo = phi;
-	pthread_t		death_oracle;
+	uint8_t const	limited_meals = philo->perspective->limited_meals;
 
 	philo->last_meal = get_timestamp();
-	pthread_create(&death_oracle, NULL, &death_prediction, phi);
-	while (!philo->perspective->someone_die && !philo->has_finished)
+	while (!philo->perspective->someone_die)
 	{
 		take_forks(philo);
 		eat_(philo);
+		if (limited_meals)
+		{
+			if (philo->meals_eated >= philo->perspective->eat_limit)
+				break ;
+		}
 		sleep_(philo);
 		think_(philo);
 	}
-	pthread_join(death_oracle, NULL);
 	++philo->perspective->finished_meal;
 	return (NULL);
+}
+
+static uint32_t	lauch_philo(t_philo *philos, struct s_the_table const *table,
+		uint32_t start)
+{
+	uint32_t	i;
+
+	i = start;
+	while (i < table->n_philo)
+	{
+		if (pthread_create(table->philos + i, NULL, &dinner, philos + i))
+			return (printf ("%sError:%s pthread_create fail\n", RED, EOC));
+		i += 2;
+	}
+	return (0);
 }
 
 static char	start_dinner(t_philo *philos, struct s_the_table *table)
 {
 	uint32_t	i;
 
+	pthread_mutex_lock(&table->display);
+	if (lauch_philo(philos, table, 0))
+		return (1);
+	ft_usleep(table->time_eat >> 1);
+	if (lauch_philo(philos, table, 1))
+		return (1);
 	table->time_start = get_timestamp();
-	i = 0;
-	while (i < table->n_philo)
-	{
-		if (pthread_create(table->philos + i,
-				NULL, &dinner, philos + i))
-			return (printf ("%sError:%s pthread_create fail\n", RED, EOC));
-		usleep(10);
-		++i;
-	}
+	pthread_mutex_unlock(&table->display);
+	usleep(2000);
+	monitor(table, philos);
 	i = 0;
 	while (i < table->n_philo)
 		pthread_join(table->philos[i++], NULL);
@@ -107,7 +111,9 @@ int	main(int ac, char **av)
 	if (start_dinner(philos, &table))
 		return (clean_the_table_and_send_the_philosophers_home(
 				&table, &philos));
-	monitor(&table);
+	if (!table.someone_die)
+		printf ("\n%s*\t%ld\t%sAll meals have been eated *%s\n",
+			PURPLE, get_timestamp() - table.time_start, GREEN, EOC);
 	return (clean_the_table_and_send_the_philosophers_home(
 			&table, &philos));
 }

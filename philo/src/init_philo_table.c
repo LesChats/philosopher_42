@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2022/01/31 15:52:30 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 16:40:46 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,27 @@ static void	set_the_cultery(struct s_the_table *table, char **av, const int ac)
 	table->finished_meal = 0;
 }
 
+uint8_t	ft_nitoa(char *s, uint32_t num)
+{
+	uint32_t const	len = (1 + (num >= 10)
+			+ (num >= 100) + (num >= 1000) + (num >= 10000));
+
+	s += len + 1;
+	*--s = 0;
+	while (num)
+	{
+		*--s = '0' + (num % 10);
+		num /= 10;
+	}
+	return (len);
+}
+
 uint8_t	dress_table(struct s_the_table *table, t_philo **philosopher,
 		char **av, const int ac)
 {
 	uint32_t	i;
 
+	printf("hello size of philo: %lu\n", sizeof(t_philo));
 	set_the_cultery(table, av, ac);
 	table->philos = malloc(sizeof(pthread_t) * table->n_philo);
 	*philosopher = malloc(sizeof(t_philo) * table->n_philo);
@@ -74,7 +90,7 @@ uint8_t	dress_table(struct s_the_table *table, t_philo **philosopher,
 		(*philosopher)[i].perspective = table;
 		(*philosopher)[i].meals_eated = 0;
 		(*philosopher)[i].name = i + 1;
-		(*philosopher)[i].has_finished = 0;
+		(*philosopher)[i].n_name = ft_nitoa((*philosopher)[i].str_name, i + 1);
 		++i;
 	}
 	pthread_mutex_init(&table->display, NULL);

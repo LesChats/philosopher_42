@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:40 by abaudot           #+#    #+#             */
-/*   Updated: 2022/01/31 16:16:40 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 16:42:23 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,21 @@ static void	set_the_cultery(struct s_the_table *table, char **av, const int ac)
 		table->eat_limit = 0;
 }
 
+uint8_t	ft_nitoa(char *s, uint32_t num)
+{
+	uint32_t const	len = (1 + (num >= 10)
+			+ (num >= 100) + (num >= 1000) + (num >= 10000));
+
+	s += len + 1;
+	*--s = 0;
+	while (num)
+	{
+		*--s = '0' + (num % 10);
+		num /= 10;
+	}
+	return (len);
+}
+
 static uint8_t	rewiew_guest_list(t_philo *philos, uint32_t n_philo)
 {
 	char		sem_name[22];
@@ -61,13 +76,10 @@ static uint8_t	rewiew_guest_list(t_philo *philos, uint32_t n_philo)
 
 	memset(sem_name, ' ', 22);
 	sem_name[21] = 0;
-	eat_sem = malloc(sizeof(sem_t *) * n_philo);
+	eat_sem = malloc(sizeof(sem_t *) * (n_philo));
 	if (!eat_sem)
 		return (printf("%sError:%s memory allocation have failed", RED, EOC));
-	ft_buffnbr(1, sem_name, 21);
-	sem_unlink(sem_name);
-	philos->eat_sem = sem_open(sem_name, O_CREAT | O_EXCL, S_IRWXU, 1);
-	while (--n_philo)
+	while (n_philo--)
 	{
 		ft_buffnbr(n_philo + 1, sem_name, 21);
 		sem_unlink(sem_name);
@@ -78,6 +90,8 @@ static uint8_t	rewiew_guest_list(t_philo *philos, uint32_t n_philo)
 		philos[n_philo].forks = philos->forks;
 		philos[n_philo].display = philos->display;
 		philos[n_philo].kill_table = philos->kill_table;
+		philos[n_philo].n_name = ft_nitoa(philos[n_philo].str_name,
+				n_philo + 1);
 	}
 	free(eat_sem);
 	return (0);

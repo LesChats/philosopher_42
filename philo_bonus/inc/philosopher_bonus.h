@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:03 by abaudot           #+#    #+#             */
-/*   Updated: 2022/01/31 16:17:18 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 16:21:41 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,11 @@ typedef struct s_philo
 	sem_t				*kill_table;
 	sem_t				*eat_sem;
 	long				last_meal;
+	long				offset;
 	int					pid;
 	uint32_t			name;
+	uint8_t				n_name;
+	char				str_name[7];
 }						t_philo;
 
 /*
@@ -105,9 +108,9 @@ void		start_dinner(t_philo *philos);
 /*
 ** Action
 */
-void		take_forks(const t_philo *philo);
+void		take_forks(t_philo *philo);
 void		eat_(t_philo *philo);
-void		sleep_(const t_philo *philo);
+void		sleep_(t_philo *philo);
 void		think_(const t_philo *philo);
 void		*death_prediction(void *phi);
 #endif

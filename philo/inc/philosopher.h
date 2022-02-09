@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:03 by abaudot           #+#    #+#             */
-/*   Updated: 2022/01/31 15:51:31 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 14:41:13 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@
 
 struct	s_the_table
 {
+	pthread_mutex_t	display;
 	pthread_t		*philos;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	display;
 	long			time_start;
 	uint32_t		time_die;
 	uint32_t		time_eat;
@@ -60,17 +60,19 @@ struct	s_the_table
 	uint32_t		eat_limit;
 	uint32_t		finished_meal;
 	uint32_t		n_philo;
-	char			someone_die;
-	char			limited_meals;
+	uint8_t			someone_die;
+	uint8_t			limited_meals;
 };
 
 typedef struct s_philo
 {
 	struct s_the_table	*perspective;
 	long				last_meal;
+	long				offset;
 	uint32_t			name;
 	uint32_t			meals_eated;
-	char				has_finished;
+	uint8_t				n_name;
+	char				str_name[7];
 }						t_philo;
 
 /*
@@ -94,9 +96,9 @@ uint8_t		dress_table(struct s_the_table *table, t_philo **philosopher,
 /*
 ** Action
 */
-void		take_forks(const t_philo *philo);
+void		take_forks(t_philo *philo);
 void		eat_(t_philo *philo);
-void		sleep_(const t_philo *philo);
-void		think_(const t_philo *philo);
-void		*death_prediction(void *phi);
+void		sleep_(t_philo *philo);
+void		think_(t_philo *philo);
+void		monitor(struct s_the_table *table, t_philo *philo);
 #endif

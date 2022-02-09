@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/18 22:43:04 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 16:33:40 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,12 @@ static uint8_t	free_assage(t_philo **philos, const uint32_t n)
 	sem_close((*philos)->kill_table);
 	i = 0;
 	while (i < n)
-		sem_close(((*philos) + i++)->eat_sem);
+	{
+		sem_close(((*philos) + i)->eat_sem);
+		++i;
+	}
 	free(*philos);
-	return (1);
+	return (0);
 }
 
 static uint8_t	print_usage(void)

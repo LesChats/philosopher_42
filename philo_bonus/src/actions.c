@@ -6,16 +6,17 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:26 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/23 17:45:54 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 16:05:05 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher_bonus.h"
 
-void	take_forks(const t_philo *philo)
+void	take_forks(t_philo *philo)
 {
 	sem_wait(philo->forks);
 	sem_wait(philo->forks);
+	philo->offset = get_timestamp();
 	sem_wait(philo->display);
 	annonce(philo, FORK);
 	annonce(philo, FORK);
@@ -24,22 +25,29 @@ void	take_forks(const t_philo *philo)
 
 void	eat_(t_philo *philo)
 {
+	uint32_t	time;
+
 	sem_wait(philo->display);
 	annonce(philo, EAT);
 	philo->last_meal = get_timestamp();
 	sem_post(philo->eat_sem);
 	sem_post(philo->display);
-	ft_usleep(philo->table->time_eat);
+	time = philo->table->time_eat - (get_timestamp() - philo->offset);
+	ft_usleep(time);
+	philo->offset = get_timestamp();
 	sem_post(philo->forks);
 	sem_post(philo->forks);
 }
 
-void	sleep_(const t_philo *philo)
+void	sleep_(t_philo *philo)
 {
+	uint32_t	time;
+
 	sem_wait(philo->display);
 	annonce(philo, SLEEP);
 	sem_post(philo->display);
-	ft_usleep(philo->table->time_sleep);
+	time = philo->table->time_sleep - (get_timestamp() - philo->offset);
+	ft_usleep(time);
 }
 
 void	think_(const t_philo *philo)

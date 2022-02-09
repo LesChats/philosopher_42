@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/18 17:38:35 by abaudot           #+#    #+#             */
-/*   Updated: 2021/08/23 17:45:43 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/09 16:17:01 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	*monitor_count(void *phi)
 		++total;
 	}
 	sem_wait(philo->display);
-	write (1, ALL, LEN);
+	write (1, ALL, LEN * (table->eat_limit > 0));
 	sem_post(philo->kill_table);
 	return (NULL);
 }
@@ -51,13 +51,14 @@ static void	monitor(t_philo *philo)
 	pthread_t	eat_count;
 
 	sem_wait(philo->kill_table);
-	if (philo->table->limited_meals)
+	if (philo->table->eat_limit)
 	{
 		pthread_create(&eat_count, NULL, &monitor_count, philo);
 		pthread_detach(eat_count);
 	}
 	sem_wait(philo->kill_table);
 	kill_all(philo);
+	philo->table->eat_limit = 0;
 }
 
 static void	dinner(t_philo *philo)

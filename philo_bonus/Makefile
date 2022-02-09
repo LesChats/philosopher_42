@@ -6,13 +6,13 @@
 #    By: abaudot <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/09 14:48:17 by abaudot           #+#    #+#              #
-#    Updated: 2021/08/23 17:48:22 by abaudot          ###   ########.fr        #
+#    Updated: 2022/02/09 16:44:26 by abaudot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 UNAME	:= $(shell uname)
 
-CC		=	clang
+CC		=	gcc
 
 CFLAGS		=	-Wall -Wextra -Werror
 IFLAGS		=	-I./inc
@@ -55,8 +55,8 @@ $(BUILD):
 	@mkdir $@ $(OBJ_DIR);
 
 $(OBJ_DIR)/%.o:$(SRC_DIR)/%.c | $(BUILD)
-	@printf "$(CL_LINE)Compiling srcs object : $(B_CYAN)$< $(NONE)...\r"
-	@$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
+	@printf "$(CL_LINE)$(B_GREEN)Compiling srcs object : $(B_CYAN)$< $(NONE)..."
+	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 
 $(NAME): $(OBJ)
 	@printf "$(CL_LINE)"
