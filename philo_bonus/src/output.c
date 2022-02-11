@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:12:15 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 16:42:08 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/10 21:53:15 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,12 @@ uint8_t	one_philo(const struct s_the_table *table)
 	uint32_t	i;
 
 	i = 26;
-	ft_buffnbr(table->time_die, buff, 18);
+	ft_buffnbr(0, buff, 18);
 	buff[i++] = '1';
 	buff[i++] = '\t';
 	ft_strncpy(buff + i, FORK, LEN);
 	write(1, buff, i + LEN);
+	ft_buffnbr(table->time_die, buff, 18);
 	ft_strncpy(buff + i, DEATH, LEN);
 	(void)!write(1, buff, i + LEN);
 	return (1);

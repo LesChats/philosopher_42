@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:03 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 21:20:17 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/10 18:02:38 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,5 @@ void		eat_(t_philo *philo);
 void		sleep_(t_philo *philo);
 void		think_(t_philo *philo);
 void		monitor(struct s_the_table *table, t_philo *philo);
+void		*dinner(void *phi);
 #endif

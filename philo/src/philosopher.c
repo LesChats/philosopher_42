@@ -6,42 +6,11 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:18:19 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 21:20:10 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/10 22:45:57 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
-
-static void	*dinner(void *phi)
-{
-	t_philo *const	philo = phi;
-	uint8_t const	limited_meals = philo->perspective->limited_meals;
-
-	philo->last_meal = get_timestamp();
-	while (1)
-	{
-		pthread_mutex_lock(&philo->perspective->display);
-		if (philo->perspective->someone_die)
-		{
-			pthread_mutex_unlock(&philo->perspective->display);
-			break ;
-		}
-		pthread_mutex_unlock(&philo->perspective->display);
-		take_forks(philo);
-		eat_(philo);
-		if (limited_meals)
-		{
-			if (philo->meals_eated >= philo->perspective->eat_limit)
-				break ;
-		}
-		sleep_(philo);
-		think_(philo);
-	}
-	pthread_mutex_lock(&philo->perspective->display);
-	++philo->perspective->finished_meal;
-	pthread_mutex_unlock(&philo->perspective->display);
-	return (NULL);
-}
 
 static uint32_t	lauch_philo(t_philo *philos, struct s_the_table const *table,
 		uint32_t start)
@@ -101,6 +70,16 @@ static int	clean_the_table_and_send_the_philosophers_home(
 	return (0);
 }
 
+static int	solo_player_always_die(t_philo **philos,
+			struct s_the_table *table)
+{
+	table->time_start = get_timestamp();
+	annonce(*philos, FORK);
+	ft_usleep(table->time_die);
+	annonce(*philos, DEATH);
+	return (clean_the_table_and_send_the_philosophers_home(table, philos));
+}
+
 int	main(int ac, char **av)
 {
 	struct s_the_table	table;
@@ -117,6 +96,8 @@ int	main(int ac, char **av)
 	if (dress_table(&table, &philos, av, ac))
 		return (clean_the_table_and_send_the_philosophers_home(
 				&table, &philos));
+	if (table.n_philo == 1)
+		return (solo_player_always_die(&philos, &table));
 	if (start_dinner(philos, &table))
 		return (clean_the_table_and_send_the_philosophers_home(
 				&table, &philos));

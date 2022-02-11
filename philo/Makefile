@@ -6,7 +6,7 @@
 #    By: abaudot <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/09 14:48:17 by abaudot           #+#    #+#              #
-#    Updated: 2022/02/09 21:01:59 by abaudot          ###   ########.fr        #
+#    Updated: 2022/02/10 17:58:52 by abaudot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ NAME 		= philo
 SRC 	:=	output.c				\
 	  		init_philo_table.c		\
 	  		lib.c					\
+			dinner.c\
 	  		actions.c				\
 	  		philosopher.c
 

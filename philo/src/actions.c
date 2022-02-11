@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:26 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 21:25:22 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/10 22:46:20 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,7 @@ void	monitor(struct s_the_table *table, t_philo *philo)
 		i = 0;
 		pthread_mutex_lock(&table->display);
 		if (table->finished_meal == table->n_philo)
-		{
-			pthread_mutex_unlock(&table->display);
-			return ;
-		}
+			return ((void)pthread_mutex_unlock(&table->display));
 		finish_time = get_timestamp();
 		while (i < table->n_philo)
 		{
@@ -71,8 +68,6 @@ void	eat_(t_philo *philo)
 	++philo->meals_eated;
 	philo->last_meal = get_timestamp();
 	pthread_mutex_unlock(&philo->perspective->display);
-
-
 	time = philo->perspective->time_eat - (get_timestamp() - philo->offset);
 	ft_usleep(time * (!someone_die));
 	philo->offset = get_timestamp();
@@ -90,7 +85,6 @@ void	sleep_(t_philo *philo)
 	someone_die = philo->perspective->someone_die;
 	annonce(philo, SLEEP);
 	pthread_mutex_unlock(&philo->perspective->display);
-
 	time = philo->perspective->time_sleep - (get_timestamp() - philo->offset);
 	ft_usleep(time * !someone_die);
 	philo->offset = get_timestamp();

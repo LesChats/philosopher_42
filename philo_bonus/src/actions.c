@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:26 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/09 16:05:05 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/10 20:43:50 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	*death_prediction(void *phi)
 			return (NULL);
 		}
 		sem_post(philo->display);
-		usleep(1000);
+		usleep(philo->table->time_die >> 1);
 	}
 	return (NULL);
 }
