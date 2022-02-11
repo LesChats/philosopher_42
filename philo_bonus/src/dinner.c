@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/18 17:38:35 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/10 22:00:00 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/11 15:57:37 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	monitor_count(t_philo *philo)
 		++total;
 	}
 	sem_wait(philo->display);
-	write (1, ALL, LEN * (table->eat_limit > 0));
+	(void)!write (1, ALL, LEN * (table->eat_limit > 0));
 	if (table->eat_limit > 0)
 		sem_post(philo->kill_table);
 	while (1)
@@ -55,11 +55,15 @@ static void	monitor(t_philo *philo)
 	int	pid;
 
 	if (philo->table->eat_limit)
+	{
 		pid = fork();
-	if (pid == 0)
-		monitor_count(philo);
-	sem_wait(philo->kill_table);
-	kill(pid, SIGKILL);
+		if (pid == 0)
+			monitor_count(philo);
+		sem_wait(philo->kill_table);
+		kill(pid, SIGKILL);
+	}
+	else
+		sem_wait(philo->kill_table);
 	kill_all(philo);
 	philo->table->eat_limit = 0;
 }
