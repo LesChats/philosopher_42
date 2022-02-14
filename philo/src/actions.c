@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:26 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/10 22:46:20 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/14 13:22:53 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,14 @@ void	monitor(struct s_the_table *table, t_philo *philo)
 
 void	take_forks(t_philo *philo)
 {
-	uint32_t	tmp;
-
-	tmp = philo->name - (philo->name & 1);
-	tmp *= !(tmp == philo->perspective->n_philo);
-	pthread_mutex_lock(philo->perspective->forks + tmp);
-	tmp = philo->name - !(philo->name & 1);
-	tmp *= !(tmp == philo->perspective->n_philo);
-	pthread_mutex_lock(philo->perspective->forks + tmp);
-	philo->offset = get_timestamp();
+	pthread_mutex_lock(philo->perspective->forks + (philo->name - 1));
 	pthread_mutex_lock(&philo->perspective->display);
 	annonce(philo, FORK);
+	pthread_mutex_unlock(&philo->perspective->display);
+	pthread_mutex_lock(philo->perspective->forks + (philo->name
+			* (philo->name != philo->perspective->n_philo)));
+	philo->offset = get_timestamp();
+	pthread_mutex_lock(&philo->perspective->display);
 	annonce(philo, FORK);
 	pthread_mutex_unlock(&philo->perspective->display);
 }

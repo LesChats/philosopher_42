@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:12:15 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/11 15:54:22 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/14 13:45:07 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,14 @@ uint8_t	one_philo(const struct s_the_table *table)
 	return (1);
 }
 
+/*
 void	annonce(const t_philo *philo, const char *message)
 {
-	static char			buff[65536];
-	static char			time[64] = "\033[1;36m-----------\033[0;0m\t";
-	static uint32_t		bsize;
+	static char			buff[64];
+	static char			time[32] = "\033[1;36m-----------\033[0;0m\t";
+	uint32_t			bsize;
 
+	bsize = 0;
 	ft_buffnbr(get_timestamp() - philo->table->time_start, time, 18);
 	ft_strncpy(buff + bsize, time, 26);
 	bsize += 26;
@@ -63,13 +65,10 @@ void	annonce(const t_philo *philo, const char *message)
 	buff[bsize++] = '\t';
 	ft_strncpy(buff + bsize, message, LEN);
 	bsize += LEN;
-	if ((message[11] != 'e') & (message[8] != 'd'))
-		return ;
 	(void)!write(1, buff, bsize);
-	bsize = 0;
 }
+*/
 
-/*
 void	annonce(const t_philo *philo, const char *message)
 {
 	static char		buff[64] = "\033[1;36m-----------\033[0;0m\t";
@@ -77,13 +76,13 @@ void	annonce(const t_philo *philo, const char *message)
 
 	i = 26;
 	ft_buffnbr(get_timestamp() - philo->table->time_start, buff, 18);
-	i += ft_buffnbr(philo->name, buff + i, num_size(philo->name));
+	ft_strncpy(buff + i, philo->str_name, philo->n_name);
+	i += philo->n_name;
 	buff[i++] = '\t';
 	ft_strncpy(buff + i, message, LEN);
 	i += LEN;
 	write(1, buff, i);
 }
-*/
 /*
 ** For those using tester or over concervative about the output
 ** Pair whit change in .h file

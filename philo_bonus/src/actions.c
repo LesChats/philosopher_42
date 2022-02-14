@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:07:26 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/10 20:43:50 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/02/14 13:24:57 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 void	take_forks(t_philo *philo)
 {
 	sem_wait(philo->forks);
-	sem_wait(philo->forks);
-	philo->offset = get_timestamp();
 	sem_wait(philo->display);
 	annonce(philo, FORK);
+	sem_post(philo->display);
+	sem_wait(philo->forks);
+	philo->offset = get_timestamp();
 	annonce(philo, FORK);
 	sem_post(philo->display);
 }
