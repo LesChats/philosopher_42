@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/18 17:38:35 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/11 15:57:37 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/05/03 17:22:09 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	monitor_count(t_philo *philo)
 	uint32_t					i;
 
 	total = 0;
-	while (total <= table->eat_limit)
+	while (total < table->eat_limit)
 	{
 		i = 0;
 		while (i < table->n_philo)

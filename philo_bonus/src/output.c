@@ -6,7 +6,7 @@
 /*   By: abaudot <abaudot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 21:12:15 by abaudot           #+#    #+#             */
-/*   Updated: 2022/02/14 13:45:07 by abaudot          ###   ########.fr       */
+/*   Updated: 2022/05/03 17:21:52 by abaudot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	annonce(const t_philo *philo, const char *message)
 	buff[i++] = '\t';
 	ft_strncpy(buff + i, message, LEN);
 	i += LEN;
-	write(1, buff, i);
+	(void)!write(1, buff, i);
 }
 /*
 ** For those using tester or over concervative about the output
